@@ -12,13 +12,23 @@ angular.module('webReversiApp')
     $scope.field = [];
     $scope.dim = 8;
 
-    for (var row = 0; row < 8; row++){
-      var newRow = [];
-      for (var col = 0; col < 8; col++){
-        newRow[col] = Math.random() < 0.5 ? 0 : 1;
+    $scope.resetField = function(){
+      for (var row = 0; row < 8; row++){
+        var newRow = [];
+        for (var col = 0; col < 8; col++){
+          newRow[col] = null;
+        }
+        $scope.field[row] = newRow;
       }
-      $scope.field[row] = newRow;
+
+      $scope.field[3][3] = 1;
+      $scope.field[4][4] = 1;
+      $scope.field[3][4] = 0;
+      $scope.field[4][3] = 0;
+
     }
+
+    $scope.resetField();
 
     $scope.$on('reversiClickField', function(event, rowidx, colidx){
       console.log('reversiClickField', rowidx, colidx);
