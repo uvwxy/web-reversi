@@ -2,6 +2,8 @@
 
 This is a hobby project to write a reversi game using Bootstrap and AngularJS.
 
+Play here: uvwxy.gitub.io/web-reversi
+
 ToDo:
 
 - A function to calculate a move
