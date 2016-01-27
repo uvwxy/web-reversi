@@ -2,7 +2,7 @@
 
 This is a hobby project to write a reversi game using Bootstrap and AngularJS.
 
-Play here: uvwxy.gitub.io/web-reversi
+Play here: http://uvwxy.github.io/web-reversi
 
 ToDo:
 
