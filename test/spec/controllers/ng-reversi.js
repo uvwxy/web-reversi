@@ -1,0 +1,23 @@
+'use strict';
+
+describe('Controller: NgReversiCtrl', function () {
+
+  // load the controller's module
+  beforeEach(module('webReversiApp'));
+
+  var NgReversiCtrl,
+    scope;
+
+  // Initialize the controller and a mock scope
+  beforeEach(inject(function ($controller, $rootScope) {
+    scope = $rootScope.$new();
+    NgReversiCtrl = $controller('NgReversiCtrl', {
+      $scope: scope
+      // place here mocked dependencies
+    });
+  }));
+
+  it('should attach a list of awesomeThings to the scope', function () {
+    expect(NgReversiCtrl.awesomeThings.length).toBe(3);
+  });
+});

@@ -1,0 +1,46 @@
+@import "bootstrap-sass-official/assets/stylesheets/bootstrap/_variables";
+
+.ng-reversi-row {
+}
+
+.ng-reversi-col {
+  background : $brand-success;
+  border-style: solid;
+  border-color: $table-border-color;
+  border-width: 1px;
+  float: left;
+  width: 12.5%;
+  height: 0;
+  padding-bottom: 12.5%;
+}
+
+@mixin reversi-btn(){
+  border-radius: 50%;
+  padding: 40%;
+  margin: 10%;
+}
+
+.ng-reversi-btn {
+  @include reversi-btn;
+}
+
+.ng-reversi-btn0 {
+  background: #000;
+  @include reversi-btn;
+}
+
+.ng-reversi-btn1 {
+  background: #fff;
+  @include reversi-btn;
+}
+
+
+.ng-reversi-field {
+  height: 0;
+  width: 100%;
+  padding-bottom: 100%;
+  border-style: solid;
+  border-color: $table-border-color;
+  border-width: 1px;
+  border-radius: $border-radius-small;
+}
