@@ -20,5 +20,9 @@ angular.module('webReversiApp')
       $scope.field[row] = newRow;
     }
 
+    $scope.$on('reversiClickField', function(event, rowidx, colidx){
+      console.log('reversiClickField', rowidx, colidx);
+    });
+
     console.log($scope.field);
   });
