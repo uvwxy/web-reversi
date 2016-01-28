@@ -13,10 +13,10 @@ angular.module('webReversiApp')
     $scope.dim = 8;
     $scope.player = 1;
 
-    $scope.resetField = function(){
-      for (var row = 0; row < 8; row++){
+    $scope.resetField = function () {
+      for (var row = 0; row < 8; row++) {
         var newRow = [];
-        for (var col = 0; col < 8; col++){
+        for (var col = 0; col < 8; col++) {
           newRow[col] = null;
         }
         $scope.field[row] = newRow;
@@ -31,7 +31,7 @@ angular.module('webReversiApp')
 
     $scope.resetField();
 
-    $scope.$on('reversiClickField', function(event, rowidx, colidx){
+    $scope.$on('reversiClickField', function (event, rowidx, colidx) {
       console.log('reversiClickField', rowidx, colidx);
       $scope.field[rowidx][colidx] = $scope.player;
 
