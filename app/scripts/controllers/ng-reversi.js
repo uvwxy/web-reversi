@@ -9,10 +9,12 @@
  */
 angular.module('webReversiApp')
   .controller('NgReversiCtrl', function ($scope) {
-    $scope.game = new ReversiGame();
+    $scope.game = new ABPrune.Game(ReversiLogic);
+    $scope.state = $scope.game.initialize();;
 
     $scope.game.initialize();
     $scope.$on('reversiClickField', function (event, row, col) {
-      $scope.game.move(row, col);
+      ReversiLogicHelper.move($scope.state,row, col);
+      $scope.isGameOver = $scope.state.isGameOver();
     });
   });

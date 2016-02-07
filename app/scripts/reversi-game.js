@@ -1,3 +1,28 @@
+var ReversiLogicHelper = {
+  vs: (function () {
+    var v = [-1, 0, 1];
+    var ret = [];
+    for (var x = 0; x < v.length; x++) {
+      for (var y = 0; y < v.length; y++) {
+        ret.push({x: v[x], y: v[y]});
+      }
+    }
+    return ret;
+  })(),
+  moveNext: function (curPos, vector) {
+    var nPos = {x: curPos.x + vector.x, y: curPos.y + vector.y};
+    return (nPos.x >= 8 || nPos.y >= 8 || nPos.x < 0 || nPos.y < 0) ? null : nPos;
+  },
+  move: function (state, row, col) {
+    state.data[row][col] = state.player;
+
+    // TODO: flip opponents pieces
+
+    // TODO: check who is next and set next player
+    state.player = state.player == 1 ? 2 : 1;
+  }
+};
+
 var ReversiLogic = {
   getSuccessors: function (max) {
     var succs = [];
@@ -5,25 +30,12 @@ var ReversiLogic = {
     return succs;
   },
   isMoveValid: function (row, col, playerId) {
-    var v = [-1, 0, 1];
-    var vs = [];
-    for (var x = 0; x < v.length; x++) {
-      for (var y = 0; y < v.length; y++) {
-        vs.push({x: v[x], y: v[y]});
-      }
-    }
-
-    var moveNext = function (curPos, vector) {
-      var nPos = {x: curPos.x + vector.x, y: curPos.y + vector.y};
-      return (nPos.x >= 8 || nPos.y >= 8 || nPos.x < 0 || nPos.y < 0) ? null : nPos;
-    };
-
     if (this.data[row][col] == 0) {
       // spot is free
-      for (var i = 0; i < vs.length; i++) {
+      for (var i = 0; i < ReversiLogicHelper.vs.length; i++) {
         // walk into every direction
-        var curV = vs[i];
-        var next = moveNext({x: col, y: row}, curV);
+        var curV = ReversiLogicHelper.vs[i];
+        var next = ReversiLogicHelper.moveNext({x: col, y: row}, curV);
         var foundOpponent = false;
         while (next != null) {
           // walk direction to end
@@ -36,7 +48,7 @@ var ReversiLogic = {
           } else if (value != playerId) {
             // -> continue, found opponents stone
             foundOpponent = true;
-            next = moveNext(next, curV);
+            next = ReversiLogicHelper.moveNext(next, curV);
           } else {
             if (foundOpponent) {
               return true;
@@ -102,15 +114,5 @@ var ReversiLogic = {
     state.player = 1;
 
     return state;
-  },
-
-  move: function (row, col) {
-    this.data[row][col] = this.player;
-
-    // TODO: flip opponents pieces
-
-    // TODO: check who is next and set next player
-    this.player = this.player == 1 ? 2 : 1;
   }
-
 };

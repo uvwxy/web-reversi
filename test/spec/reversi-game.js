@@ -34,4 +34,21 @@ describe("The Reversi Game", function () {
     }
   });
 
+  it('should detect if game is over', function(){
+    var game = new ABPrune.Game(ReversiLogic);
+    var state = game.initialize();
+    state.data = [
+      [0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 1, 1, 0, 0, 0],
+      [0, 0, 0, 1, 1, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0]
+    ];
+
+    expect(state.isGameOver()).toBe(true);
+  });
+
 });
