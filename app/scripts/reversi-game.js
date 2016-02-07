@@ -24,11 +24,29 @@ var ReversiLogicHelper = {
     return (nPos.x >= 8 || nPos.y >= 8 || nPos.x < 0 || nPos.y < 0) ? null : nPos;
   },
   move: function (state, row, col) {
+    var start = {x: col, y: row};
+
     if (state.isMoveValid(row, col, state.player)) {
-      state.data[row][col] = state.player;
+      var collected = [];
+      collected.push(start);
 
-      // TODO: flip opponents pieces
+      for (var i = 0; i < ReversiLogicHelper.vs.length; i++) {
+        var v = ReversiLogicHelper.vs[i];
 
+        // walk into every direction
+        if (ReversiLogicHelper.isValidVector(state, start, v, state.player)) {
+          var next = this.moveNext(start, v);
+          while (next != null && state.data[next.y][next.x] != state.player) {
+            collected.push(next);
+            next = this.moveNext(next, v);
+          }
+        }
+      }
+
+      for (var i in collected) {
+        var pos = collected[i];
+        state.data[pos.y][pos.x] = state.player;
+      }
 
       // check who is next and set next player
       if (!state.isGameOver() && this.playerHasMoves(state)) {

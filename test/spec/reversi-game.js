@@ -27,14 +27,14 @@ describe("The Reversi Game", function () {
       [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
     ];
 
-    for (var x = 0; x < 8; x++) {
-      for (var y = 0; y < 8; y++) {
+    for (var y = 0; y < 8; y++) {
+      for (var x = 0; x < 8; x++) {
         expect(state.isMoveValid(y, x, 1)).toEqual(moves[y][x] == 'x');
       }
     }
   });
 
-  it('should detect if game is over', function(){
+  it('should detect if game is over', function () {
     var game = new ABPrune.Game(ReversiLogic);
     var state = game.initialize();
     state.data = [
@@ -49,6 +49,66 @@ describe("The Reversi Game", function () {
     ];
 
     expect(state.isGameOver()).toBe(true);
+  });
+
+  it('should move correctly', function () {
+    var game = new ABPrune.Game(ReversiLogic);
+    var state = game.initialize();
+    var result = [
+      [0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 1, 1, 1, 0, 0],
+      [0, 0, 0, 2, 1, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0]
+    ];
+    ReversiLogicHelper.move(state,3,5);
+
+    for (var y = 0; y < 8; y++) {
+      for (var x = 0; x < 8; x++) {
+        expect(result[y][x]).toEqual(state.data[y][x]);
+      }
+    }
+
+    result = [
+      [0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 2, 0, 0],
+      [0, 0, 0, 1, 2, 1, 0, 0],
+      [0, 0, 0, 2, 1, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0]
+    ];
+
+    ReversiLogicHelper.move(state,2,5);
+
+    for (var y = 0; y < 8; y++) {
+      for (var x = 0; x < 8; x++) {
+        expect(result[y][x]).toEqual(state.data[y][x]);
+      }
+    }
+
+    result = [
+      [0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 1, 2, 0, 0],
+      [0, 0, 0, 1, 1, 1, 0, 0],
+      [0, 0, 0, 2, 1, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0]
+    ];
+
+    ReversiLogicHelper.move(state,2,4);
+
+    for (var y = 0; y < 8; y++) {
+      for (var x = 0; x < 8; x++) {
+        expect(result[y][x]).toEqual(state.data[y][x]);
+      }
+    }
   });
 
 });
