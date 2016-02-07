@@ -6,33 +6,46 @@ var ReversiLogic = {
   },
   isMoveValid: function (row, col, playerId) {
     var v = [-1, 0, 1];
-    var checkDirections = [];
+    var vs = [];
     for (var x = 0; x < v.length; x++) {
       for (var y = 0; y < v.length; y++) {
-        checkDirections.push({x: v[x], y: v[y]});
+        vs.push({x: v[x], y: v[y]});
       }
     }
+
     var moveNext = function (curPos, vector) {
-      var nextPos = {x: curPos.x + vector.x, y: curPos.y + vector.y};
-      return (nextPos.x >= 8 || nextPos.y >= 8) ? null : nextPos;
+      var nPos = {x: curPos.x + vector.x, y: curPos.y + vector.y};
+      return (nPos.x >= 8 || nPos.y >= 8 || nPos.x < 0 || nPos.y < 0) ? null : nPos;
     };
 
     if (this.data[row][col] == 0) {
-      // TODO: check if this flips any other stones
-      // TODO: create 8 traversals
-      for (var i = 0; i < checkDirections; i++) {
-        var nextField = moveNext({x: col, y: row}, checkDirections[i]);
-        while (nextField != null) {
-          var value = this.data[nextField.y][nextField.x];
+      // spot is free
+      for (var i = 0; i < vs.length; i++) {
+        // walk into every direction
+        var curV = vs[i];
+        var next = moveNext({x: col, y: row}, curV);
+        var foundOpponent = false;
+        while (next != null) {
+          // walk direction to end
+
+          var value = this.data[next.y][next.x];
           if (value == 0) {
             // nothing will be flipped
+            foundOpponent = false;
+            break;
           } else if (value != playerId) {
             // -> continue, found opponents stone
-            nextField = moveNext(nextField, checkDirections[i]);
+            foundOpponent = true;
+            next = moveNext(next, curV);
           } else {
-            return true;
+            if (foundOpponent) {
+              return true;
+            } else {
+              break;
+            }
           }
         }
+
       }
     }
     return false;
@@ -43,7 +56,7 @@ var ReversiLogic = {
       for (var c = 0; c < this.data[r].length; c++) {
         for (var p = 1; p < 3; p++) {
           if (this.isMoveValid(r, c, p)) {
-            return true;
+            return false;
           }
         }
       }
@@ -75,19 +88,17 @@ var ReversiLogic = {
     var state = {};
     this._copyFunctions(state);
 
-    state.data =[];
-    for (var row = 0; row < 8; row++) {
-      var newRow = [];
-      for (var col = 0; col < 8; col++) {
-        newRow[col] = 0;
-      }
-      state.data[row] = newRow;
-    }
+    state.data = [
+      [0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 1, 2, 0, 0, 0],
+      [0, 0, 0, 2, 1, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0]
+    ];
 
-    state.data[3][3] = 1;
-    state.data[4][4] = 1;
-    state.data[3][4] = 2;
-    state.data[4][3] = 2;
     state.player = 1;
 
     return state;
