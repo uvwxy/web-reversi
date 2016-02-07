@@ -36,7 +36,7 @@ var ReversiLogicHelper = {
       }
     }
   },
-  isValidVector: function (state, start, curV) {
+  isValidVector: function (state, start, curV, playerId) {
     var next = this.moveNext(start, curV);
     var foundOpponent = false;
     while (next != null) {
@@ -47,7 +47,7 @@ var ReversiLogicHelper = {
         // nothing will be flipped
         foundOpponent = false;
         break;
-      } else if (value != state.player) {
+      } else if (value != playerId) {
         // -> continue, found opponents stone
         foundOpponent = true;
         next = this.moveNext(next, curV);
@@ -75,7 +75,7 @@ var ReversiLogic = {
       // spot is free
       for (var i = 0; i < ReversiLogicHelper.vs.length; i++) {
         // walk into every direction
-        if (ReversiLogicHelper.isValidVector(this, {x: col, y: row}, ReversiLogicHelper.vs[i])) {
+        if (ReversiLogicHelper.isValidVector(this, {x: col, y: row}, ReversiLogicHelper.vs[i], playerId)) {
           return true;
         }
       }
