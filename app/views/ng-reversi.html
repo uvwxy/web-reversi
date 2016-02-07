@@ -1,7 +1,8 @@
 <div class="ng-reversi-field">
-  <div class="ng-reversi-row" ng-repeat="row in field track by $index" ng-init="rowidx = $index">
-    <div class="ng-reversi-col" ng-repeat="col in row track by $index" ng-init="colidx = $index">
-      <div class="ng-reversi-btn{{col}}" ng-click="$emit('reversiClickField', rowidx, colidx)"></div>
+  <div class="ng-reversi-row" ng-repeat="row in game.data track by $index" ng-init="rowidx = $index">
+    <div class="ng-reversi-col" ng-repeat="col in row track by $index" ng-init="colidx = $index"
+         ng-click="$emit('reversiClickField', rowidx, colidx)">
+      <div class="ng-reversi-btn{{col}}"></div>
     </div>
   </div>
 </div>
