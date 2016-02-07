@@ -79,6 +79,17 @@ var ReversiLogicHelper = {
     }
 
     return false;
+  },
+  countPieces: function (state, playerId) {
+    var sum = 0;
+    state.data.forEach(function (c, i, a) {
+      c.forEach(function (cc, ii, aa) {
+        if (cc == playerId) {
+          sum += 1;
+        }
+      });
+    });
+    return sum;
   }
 };
 

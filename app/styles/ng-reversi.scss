@@ -43,3 +43,27 @@
   border-width: 1px;
   border-radius: $border-radius-small;
 }
+
+
+.ng-reversi-btn-status {
+  width: 2em;
+  height: 2em;
+  padding: 0;
+  margin: .5em 0 0 0;
+  float: left;
+  position: relative;
+}
+
+.ng-reversi-score {
+  float: left;
+  width : 4em;
+  margin: .75em 0 0 0;
+  text-align: center;
+}
+
+.ng-reversi-score-box {
+  height: 2em;
+  width: 8em;
+  margin-left: auto;
+  margin-right: auto;
+}
