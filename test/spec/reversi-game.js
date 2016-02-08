@@ -27,9 +27,9 @@ describe("The Reversi Game", function () {
       [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
     ];
 
-    for (var y = 0; y < 8; y++) {
-      for (var x = 0; x < 8; x++) {
-        expect(state.isMoveValid(y, x, 1)).toEqual(moves[y][x] == 'x');
+    for (var row = 0; row < 8; row++) {
+      for (var col = 0; col < 8; col++) {
+        expect(state.isMoveValid(row, col, 1)).toEqual(moves[row][col] == 'x');
       }
     }
   });
@@ -66,9 +66,9 @@ describe("The Reversi Game", function () {
     ];
     ReversiLogicHelper.move(state, 3, 5);
 
-    for (var y = 0; y < 8; y++) {
-      for (var x = 0; x < 8; x++) {
-        expect(result[y][x]).toEqual(state.data[y][x]);
+    for (var row = 0; row < 8; row++) {
+      for (var col = 0; col < 8; col++) {
+        expect(result[row][col]).toEqual(state.data[row][col]);
       }
     }
 
@@ -85,9 +85,9 @@ describe("The Reversi Game", function () {
 
     ReversiLogicHelper.move(state, 2, 5);
 
-    for (var y = 0; y < 8; y++) {
-      for (var x = 0; x < 8; x++) {
-        expect(result[y][x]).toEqual(state.data[y][x]);
+    for (var row = 0; row < 8; row++) {
+      for (var col = 0; col < 8; col++) {
+        expect(result[row][col]).toEqual(state.data[row][col]);
       }
     }
 
@@ -104,9 +104,9 @@ describe("The Reversi Game", function () {
 
     ReversiLogicHelper.move(state, 2, 4);
 
-    for (var y = 0; y < 8; y++) {
-      for (var x = 0; x < 8; x++) {
-        expect(result[y][x]).toEqual(state.data[y][x]);
+    for (var row = 0; row < 8; row++) {
+      for (var col = 0; col < 8; col++) {
+        expect(result[row][col]).toEqual(state.data[row][col]);
       }
     }
   });
@@ -139,7 +139,7 @@ describe("The Reversi Game", function () {
     state.player = 2;
     expect(ReversiLogicHelper.playerHasMoves(state)).toBe(true);
 
-  })
+  });
 
 
 });
