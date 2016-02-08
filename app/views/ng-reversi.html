@@ -2,7 +2,7 @@
   <div ng-repeat="row in state.data track by $index" ng-init="rowidx = $index">
     <div class="ng-reversi-board-square" ng-repeat="col in row track by $index" ng-init="colidx = $index"
          ng-click="$emit('reversiClickField', rowidx, colidx)">
-      <div class="ng-reversi-board-piece{{col}}"></div>
+      <div class="ng-reversi-board-piece{{col}} ng-reversi-board-piece-{{hasHint(rowidx, colidx)}}"></div>
     </div>
   </div>
 </div>
@@ -17,4 +17,8 @@
   <div class="ng-reversi-status-box">
     <div class="ng-reversi-status-active-indicator-2"  ng-show="state.player == 2"></div>
   </div>
+</div>
+
+<div class="ng-reversi-setting-hints">
+  <input type="checkbox" ng-model="hintsEnabled">Hints
 </div>

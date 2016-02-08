@@ -64,6 +64,18 @@
   transform: rotateY(180deg);
 }
 
+.ng-reversi-board-piece-hint1 {
+  @include reversi-piece;
+  background: rgba(0, 0, 0, 0.1);
+  @include reversi-piece-animate(.5s);
+}
+
+.ng-reversi-board-piece-hint2 {
+  @include reversi-piece;
+  background: rgba(255, 255, 255, 0.15);
+  @include reversi-piece-animate(.5s);
+}
+
 /**
  * Status panel + items
  */
@@ -98,7 +110,6 @@
   border-left: 1em solid $brand-success;
   @include reversi-piece-animate(.1s);
 
-
 }
 
 .ng-reversi-status-active-indicator-2 {
@@ -110,4 +121,14 @@
   border-right: 1em solid $brand-success;
   @include reversi-piece-animate(.1s);
 
+}
+
+/**
+ * Settings
+ */
+
+.ng-reversi-setting-hints {
+  float: right;
+  margin-right: 1em;
+  margin-top: -.5em;
 }
