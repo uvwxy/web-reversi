@@ -1,66 +1,70 @@
 var ReversiLogicHelper = {
-  vs: (function () {
+  _vs: (function () {
     var v = [-1, 0, 1];
     var ret = [];
-    for (var x = 0; x < v.length; x++) {
-      for (var y = 0; y < v.length; y++) {
-        ret.push({x: v[x], y: v[y]});
+    for (var row = 0; row < v.length; row++) {
+      for (var col = 0; col < v.length; col++) {
+        ret.push({row: v[row], col: v[col]});
       }
     }
     return ret;
   })(),
   playerHasMoves: function (state) {
-    for (var y = 0; y < 8; y++) {
-      for (var x = 0; x < 8; x++) {
-        if (state.isMoveValid(y, x, state.player)) {
+    for (var row = 0; row < 8; row++) {
+      for (var col = 0; col < 8; col++) {
+        if (state.isMoveValid(row, col, state.player)) {
           return true;
         }
       }
     }
     return false;
   },
-  moveNext: function (curPos, vector) {
-    var nPos = {x: curPos.x + vector.x, y: curPos.y + vector.y};
-    return (nPos.x >= 8 || nPos.y >= 8 || nPos.x < 0 || nPos.y < 0) ? null : nPos;
+  _moveNext: function (curPos, vector) {
+    var nPos = {col: curPos.col + vector.col, row: curPos.row + vector.row};
+    return (nPos.col >= 8 || nPos.row >= 8 || nPos.col < 0 || nPos.row < 0) ? null : nPos;
   },
   move: function (state, row, col) {
-    var start = {x: col, y: row};
-
     if (state.isMoveValid(row, col, state.player)) {
-      var collected = [];
-      collected.push(start);
-
-      for (var i = 0; i < ReversiLogicHelper.vs.length; i++) {
-        var v = ReversiLogicHelper.vs[i];
-
-        // walk into every direction
-        if (ReversiLogicHelper.isValidVector(state, start, v, state.player)) {
-          var next = this.moveNext(start, v);
-          while (next != null && state.data[next.y][next.x] != state.player) {
-            collected.push(next);
-            next = this.moveNext(next, v);
-          }
-        }
-      }
-
-      for (var i in collected) {
-        var pos = collected[i];
-        state.data[pos.y][pos.x] = state.player;
-      }
-
-      // check who is next and set next player
-      if (!state.isGameOver() && this.playerHasMoves(state)) {
-        state.player = state.player == 1 ? 2 : 1;
-      }
+      this._doValidMove(state, row, col, state.player);
     }
   },
-  isValidVector: function (state, start, curV, playerId) {
-    var next = this.moveNext(start, curV);
+  _doValidMove: function (state, row, col, player) {
+    var start = {row: row, col: col};
+
+    var collected = [];
+    collected.push(start);
+
+    for (var i = 0; i < ReversiLogicHelper._vs.length; i++) {
+      var v = ReversiLogicHelper._vs[i];
+
+      // walk into every direction
+      if (ReversiLogicHelper._isValidVector(state, start, v, player)) {
+        var next = this._moveNext(start, v);
+        while (next != null && state.data[next.row][next.col] != player) {
+          collected.push(next);
+          next = this._moveNext(next, v);
+        }
+      }
+    }
+
+    for (var i in collected) {
+      var pos = collected[i];
+      state.data[pos.row][pos.col] = state.player;
+    }
+
+    // check who is next and set next player
+    if (!state.isGameOver() && this.playerHasMoves(state)) {
+      state.player = state.player == 1 ? 2 : 1;
+    }
+  }
+  ,
+  _isValidVector: function (state, start, curV, playerId) {
+    var next = this._moveNext(start, curV);
     var foundOpponent = false;
     while (next != null) {
       // walk direction to end
 
-      var value = state.data[next.y][next.x];
+      var value = state.data[next.row][next.col];
       if (value == 0) {
         // nothing will be flipped
         foundOpponent = false;
@@ -68,7 +72,7 @@ var ReversiLogicHelper = {
       } else if (value != playerId) {
         // -> continue, found opponents stone
         foundOpponent = true;
-        next = this.moveNext(next, curV);
+        next = this._moveNext(next, curV);
       } else {
         if (foundOpponent) {
           return true;
@@ -96,15 +100,28 @@ var ReversiLogicHelper = {
 var ReversiLogic = {
   getSuccessors: function (max) {
     var succs = [];
-    // TODO: calculate successors
+    for (var row = 0; row < 8; row++) {
+      for (var col = 0; col < 8; col++) {
+
+        if (this.isMoveValid(row, col, max ? 1 : 2)) {
+
+          var copiedState = {data: []}
+          for (var i = 0; i < this.data.length; i++)
+            copiedState.data[i] = this.data[i].slice();
+          this._copyFunctions(copiedState);
+          copiedState.move = {row: row, col: col};
+          ReversiLogicHelper._doValidMove(copiedState, row, col, max ? 1 : 2);
+        }
+      }
+    }
     return succs;
   },
   isMoveValid: function (row, col, playerId) {
     if (this.data[row][col] == 0) {
       // spot is free
-      for (var i = 0; i < ReversiLogicHelper.vs.length; i++) {
+      for (var i = 0; i < ReversiLogicHelper._vs.length; i++) {
         // walk into every direction
-        if (ReversiLogicHelper.isValidVector(this, {x: col, y: row}, ReversiLogicHelper.vs[i], playerId)) {
+        if (ReversiLogicHelper._isValidVector(this, {row: row, col: col}, ReversiLogicHelper._vs[i], playerId)) {
           return true;
         }
       }
@@ -113,10 +130,10 @@ var ReversiLogic = {
   },
   isGameOver: function () {
     // checks whether any party can move
-    for (var r = 0; r < this.data.length; r++) {
-      for (var c = 0; c < this.data[r].length; c++) {
-        for (var p = 1; p < 3; p++) {
-          if (this.isMoveValid(r, c, p)) {
+    for (var row = 0; row < this.data.length; row++) {
+      for (var col = 0; col < this.data[row].length; col++) {
+        for (var player = 1; player < 3; player++) {
+          if (this.isMoveValid(row, col, player)) {
             return false;
           }
         }
@@ -138,9 +155,9 @@ var ReversiLogic = {
     ];
 
     // checks whether any party can move
-    for (var r = 0; r < this.data.length; r++) {
-      for (var c = 0; c < this.data.length; c++) {
-        this.score += this.data[r][c] == playerId ? scoreMap[r][c] : 0;
+    for (var row = 0; row < this.data.length; row++) {
+      for (var col = 0; col < this.data.length; col++) {
+        this.score += this.data[row][col] == playerId ? scoreMap[row][col] : 0;
       }
     }
     return this.score;

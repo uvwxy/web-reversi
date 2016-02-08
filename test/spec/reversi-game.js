@@ -64,7 +64,7 @@ describe("The Reversi Game", function () {
       [0, 0, 0, 0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0, 0, 0, 0]
     ];
-    ReversiLogicHelper.move(state,3,5);
+    ReversiLogicHelper.move(state, 3, 5);
 
     for (var y = 0; y < 8; y++) {
       for (var x = 0; x < 8; x++) {
@@ -83,7 +83,7 @@ describe("The Reversi Game", function () {
       [0, 0, 0, 0, 0, 0, 0, 0]
     ];
 
-    ReversiLogicHelper.move(state,2,5);
+    ReversiLogicHelper.move(state, 2, 5);
 
     for (var y = 0; y < 8; y++) {
       for (var x = 0; x < 8; x++) {
@@ -102,7 +102,7 @@ describe("The Reversi Game", function () {
       [0, 0, 0, 0, 0, 0, 0, 0]
     ];
 
-    ReversiLogicHelper.move(state,2,4);
+    ReversiLogicHelper.move(state, 2, 4);
 
     for (var y = 0; y < 8; y++) {
       for (var x = 0; x < 8; x++) {
@@ -110,5 +110,36 @@ describe("The Reversi Game", function () {
       }
     }
   });
+
+  it('should count pieces correctly', function () {
+    var game = new ABPrune.Game(ReversiLogic);
+    var state = game.initialize();
+    expect(ReversiLogicHelper.countPieces(state, 1)).toBe(2);
+    expect(ReversiLogicHelper.countPieces(state, 2)).toBe(2);
+  });
+
+  it ('should detect whether players have moves', function(){
+    var game = new ABPrune.Game(ReversiLogic);
+    var state = game.initialize();
+    expect(ReversiLogicHelper.playerHasMoves(state)).toBe(true);
+    state.player = 2;
+    expect(ReversiLogicHelper.playerHasMoves(state)).toBe(true);
+    state.data = [
+      [0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 1, 1, 1, 0, 0],
+      [0, 0, 0, 1, 2, 1, 0, 0],
+      [0, 0, 0, 1, 1, 1, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0]
+    ];
+    state.player = 1;
+    expect(ReversiLogicHelper.playerHasMoves(state)).toBe(false);
+    state.player = 2;
+    expect(ReversiLogicHelper.playerHasMoves(state)).toBe(true);
+
+  })
+
 
 });
