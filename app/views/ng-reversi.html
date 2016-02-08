@@ -1,11 +1,20 @@
-<div class="ng-reversi-field">
-  <div class="ng-reversi-row" ng-repeat="row in state.data track by $index" ng-init="rowidx = $index">
-    <div class="ng-reversi-col" ng-repeat="col in row track by $index" ng-init="colidx = $index"
+<div class="ng-reversi-game-panel">
+  <div ng-repeat="row in state.data track by $index" ng-init="rowidx = $index">
+    <div class="ng-reversi-board-square" ng-repeat="col in row track by $index" ng-init="colidx = $index"
          ng-click="$emit('reversiClickField', rowidx, colidx)">
-      <div class="ng-reversi-btn{{col}}"></div>
+      <div class="ng-reversi-board-piece{{col}}"></div>
     </div>
   </div>
 </div>
-<div class="ng-reversi-score-box">
-   <div class="ng-reversi-btn1 ng-reversi-btn-status"></div><div class="ng-reversi-score"> {{score1}} : {{score2}} </div><div class="ng-reversi-btn2 ng-reversi-btn-status"></div>
+<!-- Status/Score Panel -->
+<div class="ng-reversi-status-panel">
+  <div class="ng-reversi-status-box">
+    <div class="ng-reversi-status-active-indicator-1" ng-show="state.player == 1"></div>
+  </div>
+  <div class="ng-reversi-status-box ng-reversi-board-piece1"></div>
+  <div class="ng-reversi-status-label"> {{score1}} : {{score2}}</div>
+  <div class="ng-reversi-status-box ng-reversi-board-piece2"></div>
+  <div class="ng-reversi-status-box">
+    <div class="ng-reversi-status-active-indicator-2"  ng-show="state.player == 2"></div>
+  </div>
 </div>
