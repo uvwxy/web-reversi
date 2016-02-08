@@ -13,7 +13,6 @@
   border-radius: $border-radius-small;
 }
 
-
 .ng-reversi-board-square {
   background: $brand-success;
   border-style: solid;
@@ -28,24 +27,41 @@
 /**
  * Game pieces
  */
-@mixin reversi-btn() {
+@mixin reversi-piece() {
   border-radius: 50%;
   padding: 40%;
   margin: 10%;
 }
 
-.ng-reversi-board-piece {
-  @include reversi-btn;
+@mixin reversi-piece-animate($duration) {
+  -webkit-transition: all $duration ease-in;
+  -moz-transition: all $duration ease-in;
+  -o-transition: all $duration ease-in;
+  transition: all $duration ease-in;
+}
+
+.ng-reversi-board-piece0 {
+  @include reversi-piece;
 }
 
 .ng-reversi-board-piece1 {
   background: #000;
-  @include reversi-btn;
+  @include reversi-piece;
+  @include reversi-piece-animate(.5s);
+  -moz-transform: rotateY(0deg);
+  -webkit-transform: rotateY(0deg);
+  -o-transform: rotateY(0deg);
+  transform: rotateY(0deg);
 }
 
 .ng-reversi-board-piece2 {
   background: #fff;
-  @include reversi-btn;
+  @include reversi-piece;
+  @include reversi-piece-animate(.5s);
+  -moz-transform: rotateY(180deg);
+  -webkit-transform: rotateY(180deg);
+  -o-transform: rotateY(180deg);
+  transform: rotateY(180deg);
 }
 
 /**
@@ -74,18 +90,24 @@
   text-align: center;
 }
 
-.ng-reversi-status-active-indicator-1{
+.ng-reversi-status-active-indicator-1 {
   width: 0;
   height: 0;
   border-top: 1em solid transparent;
   border-bottom: 1em solid transparent;
   border-left: 1em solid $brand-success;
+  @include reversi-piece-animate(.1s);
+
+
 }
-.ng-reversi-status-active-indicator-2{
+
+.ng-reversi-status-active-indicator-2 {
   width: 0;
   height: 0;
   padding-left: 1em;
   border-top: 1em solid transparent;
   border-bottom: 1em solid transparent;
   border-right: 1em solid $brand-success;
+  @include reversi-piece-animate(.1s);
+
 }
