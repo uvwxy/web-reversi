@@ -138,6 +138,46 @@ describe("The Reversi Game", function () {
     expect(ReversiLogicHelper.playerHasMoves(state)).toBe(false);
     state.player = 2;
     expect(ReversiLogicHelper.playerHasMoves(state)).toBe(true);
+  });
+
+  it ('should select the next player after each move', function(){
+    var game = new ABPrune.Game(ReversiLogic);
+    var state = game.initialize();
+    state.data = [
+      [0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 1, 2, 0, 0, 0],
+      [0, 0, 0, 2, 1, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0]
+    ];
+    ReversiLogicHelper.move(state,2, 4);
+    expect(state.player).toBe(2);
+    ReversiLogicHelper.move(state,4, 5);
+    expect(state.player).toBe(1);
+
+    // data from issue #1
+    state.data = [
+      [0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 1, 1, 1, 2, 0],
+      [0, 0, 1, 1, 1, 2, 2, 2],
+      [0, 0, 0, 1, 2, 2, 2, 2],
+      [0, 0, 1, 2, 2, 2, 2, 2],
+      [0, 0, 0, 2, 2, 2, 2, 2]
+    ];
+    state.player = 1;
+    ReversiLogicHelper.move(state, 3, 7); // move 1 bad position ;)
+    expect(state.player).toBe(2);
+    ReversiLogicHelper.move(state, 2, 7); // move 2 into good position
+    expect(state.player).toBe(2); // so we can move again
+    ReversiLogicHelper.move(state, 2, 6);
+    expect(state.player).toBe(2); // and again
+    ReversiLogicHelper.move(state, 2, 5);
+    expect(state.player).toBe(1); // and now its 1's turn again
 
   });
 

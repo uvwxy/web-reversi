@@ -52,8 +52,12 @@ var ReversiLogicHelper = {
       state.data[pos.row][pos.col] = state.player;
     }
 
-    // check who is next and set next player
-    if (!state.isGameOver() && this.playerHasMoves(state)) {
+    // change player
+    state.player = state.player == 1 ? 2 : 1;
+
+
+    // change player back if new player had no new moves
+    if (!state.isGameOver() && !this.playerHasMoves(state)) {
       state.player = state.player == 1 ? 2 : 1;
     }
   }
