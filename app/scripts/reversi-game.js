@@ -109,7 +109,7 @@ var ReversiLogic = {
 
         if (this.isMoveValid(row, col, max ? 1 : 2)) {
 
-          var copiedState = {data: []}
+          var copiedState = {data: []};
           for (var i = 0; i < this.data.length; i++)
             copiedState.data[i] = this.data[i].slice();
           this._copyFunctions(copiedState);
