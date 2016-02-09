@@ -1,24 +1,67 @@
-<div class="ng-reversi-game-panel">
-  <div ng-repeat="row in state.data track by $index" ng-init="rowidx = $index">
-    <div class="ng-reversi-board-square" ng-repeat="col in row track by $index" ng-init="colidx = $index"
-         ng-click="$emit('reversiClickField', rowidx, colidx)">
-      <div class="ng-reversi-board-piece{{col}} ng-reversi-board-piece-{{hasHint(rowidx, colidx)}}"></div>
+<div class="panel panel-default">
+  <div class="panel-body">
+    <div class="ng-reversi-game-panel">
+      <div ng-repeat="row in state.data track by $index" ng-init="rowidx = $index">
+        <div class="ng-reversi-board-square" ng-repeat="col in row track by $index" ng-init="colidx = $index"
+             ng-click="$emit('reversiClickField', rowidx, colidx)">
+          <div class="ng-reversi-board-piece{{col}} ng-reversi-board-piece-{{hasHint(rowidx, colidx)}}"></div>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
-<!-- Status/Score Panel -->
-<div class="ng-reversi-status-panel">
-  <div class="ng-reversi-status-box">
-    <div class="ng-reversi-status-active-indicator-1" ng-show="state.player == 1"></div>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <button type="button" class="btn btn-default btn-xs" ng-click="newGame()">New Game</button>
+    <span class="title" ng-show="isGameOver">Game Over!</span>
+    <div class="checkbox pull-right" style="margin-top: 0;">
+      <label>
+        <input type="checkbox" value="" ng-model="hintsEnabled">
+        Hints
+      </label>
+    </div>
+    <div class="checkbox pull-right" style="margin-top: 0; margin-right:1em">
+      <label>
+        <input type="checkbox" value="" ng-model="showOptions">
+        Options
+      </label>
+    </div>
   </div>
-  <div class="ng-reversi-status-box ng-reversi-board-piece1"></div>
-  <div class="ng-reversi-status-label"> {{score1}} : {{score2}}</div>
-  <div class="ng-reversi-status-box ng-reversi-board-piece2"></div>
-  <div class="ng-reversi-status-box">
-    <div class="ng-reversi-status-active-indicator-2"  ng-show="state.player == 2"></div>
+  <div class="panel-body">
+    <div class="ng-reversi-status-panel">
+      <div class="pull-left ng-reversi-status-box">
+        <div class="ng-reversi-status-active-indicator-1" ng-show="state.player == 1"></div>
+      </div>
+      <div class="pull-left ng-reversi-status-box ng-reversi-board-piece1 well"></div>
+      <div class="pull-left ng-reversi-status-label"><span class="badge">{{score1}} : {{score2}}</span></div>
+      <div class="pull-left ng-reversi-status-box ng-reversi-board-piece2 well"></div>
+      <div class="pull-left ng-reversi-status-box">
+        <div class="ng-reversi-status-active-indicator-2" ng-show="state.player == 2"></div>
+      </div>
+    </div>
+
   </div>
 </div>
 
-<div class="ng-reversi-setting-hints">
-  <input type="checkbox" ng-model="hintsEnabled">Hints
+<div class="panel panel-default" ng-show="showOptions">
+  <div class="panel-heading">
+    <h3 class="panel-title">Options</h3>
+  </div>
+  <div class="panel-body">
+    <div class="checkbox">
+      <label>
+        <input type="checkbox" value="" ng-model="ki1Enabled">
+        Let computer play (TODO)
+        <div class="pull-right ng-reversi-settings-tiny-piece ng-reversi-board-piece1"></div>
+      </label>
+    </div>
+    <div class="checkbox">
+      <label>
+        <input type="checkbox" value="" ng-model="ki2Enabled">
+        Let computer play (TODO)
+        <div class="pull-right ng-reversi-settings-tiny-piece ng-reversi-board-piece2"></div>
+      </label>
+    </div>
+  </div>
 </div>
