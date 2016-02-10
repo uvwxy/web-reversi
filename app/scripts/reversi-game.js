@@ -9,15 +9,14 @@ var ReversiLogicHelper = {
     }
     return ret;
   })(),
-  playerHasMoves: function (state) {
-    for (var row = 0; row < 8; row++) {
-      for (var col = 0; col < 8; col++) {
-        if (state.isMoveValid(row, col, state.player)) {
-          return true;
-        }
-      }
-    }
-    return false;
+  invert: function (data) {
+    var inverted = [];
+    data.forEach(function (row) {
+      inverted.push(row.slice().map(function (col) {
+        return col == 0 ? 0 : col == 1 ? 2 : 1;
+      }));
+    });
+    return inverted;
   },
   _moveNext: function (curPos, vector) {
     var nPos = {col: curPos.col + vector.col, row: curPos.row + vector.row};
@@ -57,7 +56,7 @@ var ReversiLogicHelper = {
 
 
     // change player back if new player had no new moves
-    if (!state.isGameOver() && !this.playerHasMoves(state)) {
+    if (!state.isGameOver() && !state.hasMoves(state.player)) {
       state.player = state.player == 1 ? 2 : 1;
     }
   }
@@ -102,6 +101,16 @@ var ReversiLogicHelper = {
 };
 
 var ReversiLogic = {
+  hasMoves: function (playerId) {
+    for (var row = 0; row < 8; row++) {
+      for (var col = 0; col < 8; col++) {
+        if (this.isMoveValid(row, col, playerId)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  },
   getSuccessors: function (max) {
     var succs = [];
     for (var row = 0; row < 8; row++) {
@@ -110,11 +119,13 @@ var ReversiLogic = {
         if (this.isMoveValid(row, col, max ? 1 : 2)) {
 
           var copiedState = {data: []};
-          for (var i = 0; i < this.data.length; i++)
-            copiedState.data[i] = this.data[i].slice();
+          this.data.forEach(function (row) {
+            copiedState.data.push(row.slice())
+          });
           this._copyFunctions(copiedState);
           copiedState.move = {row: row, col: col};
           ReversiLogicHelper._doValidMove(copiedState, row, col, max ? 1 : 2);
+          succs.push(copiedState);
         }
       }
     }
