@@ -97,6 +97,79 @@ var ReversiLogicHelper = {
       });
     });
     return sum;
+  },
+  getSafeCount: function (playerId, data) {
+    var score = 0;
+
+    // safe map required to track detected safe stones
+    var safeMap = [
+      [0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0]
+    ];
+
+    // a list of safe stones who's neighbors have not been checked
+    var tempStack = [];
+
+    var corners = [{row: 0, col: 0}, {row: 0, col: 7}, {row: 7, col: 0}, {row: 7, col: 7}];
+    corners.filter(function (c, i, a) {
+      return data[c.row][c.col] == playerId;
+    }).forEach(function (c, i, a) {
+      tempStack.push(c);
+      safeMap[c.row][c.col] = 1;
+      score++;
+    });
+
+    // check each element in stack if it produces more safe stones
+    while (tempStack.length > 0) {
+      var current = tempStack.pop();
+
+      // get valid neighbors that are on the map and belong to playerId
+      var neighbors = [];
+      ReversiLogicHelper._vs.filter(function (c, i, a) {
+        return !(c.row == 0 && c.col == 0);
+      }).filter(function (c, i, a) {
+        return data[current.row + c.row] != undefined && data[current.row + c.row][current.col + c.col] != undefined;
+      }).filter(function (c, i, a) {
+        return data[current.row + c.row][current.col + c.col] == playerId;
+      }).forEach(function (c, i, a) {
+        neighbors.push({row: current.row + c.row, col: current.col + c.col});
+      });
+
+      // check neighbors that are not safe yet
+      neighbors.filter(function (c, i, a) {
+        return !(safeMap[c.row][c.col] == 1);
+      }).filter(function (c, i, a) {
+        // a stone is safe if it can not be taken via each line
+        // -c -a -d
+        // -b  m +b
+        // +d +a +c
+
+        // a, b, c, d
+        var lines = [{col: 1, row: 0}, {col: 0, row: 1}, {col: 1, row: 1}, {col: -1, row: 1}];
+
+        var safeLineCount = lines.filter(function (line, i, a) {
+          return safeMap[c.row + line.row] == undefined //
+            || safeMap[c.row + line.row][c.col + line.col] == undefined //
+            || safeMap[c.row + line.row][c.col + line.col] == 1 //
+            || safeMap[c.row - line.row] == undefined //
+            || safeMap[c.row - line.row][c.col - line.col] == undefined //
+            || safeMap[c.row - line.row][c.col - line.col] == 1;
+        }).length;
+
+        if (safeLineCount == 4) {
+          safeMap[c.row][c.col] = 1;
+          tempStack.push(c);
+          score++;
+        }
+      });
+    }
+    return score;
   }
 };
 
@@ -157,25 +230,7 @@ var ReversiLogic = {
     return true;
   },
   getScore: function (playerId) {
-    this.score = 0;
-    var scoreMap = [
-      [100, 0, 50, 2, 2, 50, 0, 100],
-      [0, 0, 1, 1, 1, 1, 0, 0],
-      [50, 1, 2, 2, 2, 2, 1, 50],
-      [2, 1, 2, 2, 2, 2, 1, 2],
-      [2, 1, 2, 2, 2, 2, 1, 2],
-      [50, 1, 2, 2, 2, 2, 1, 50],
-      [0, 0, 2, 2, 2, 2, 0, 0],
-      [100, 0, 50, 2, 2, 50, 0, 100]
-    ];
-
-    // checks whether any party can move
-    for (var row = 0; row < this.data.length; row++) {
-      for (var col = 0; col < this.data.length; col++) {
-        this.score += this.data[row][col] == playerId ? scoreMap[row][col] : 0;
-      }
-    }
-    return this.score;
+    return ReversiLogicHelper.getSafeCount(playerId, this.data) - ReversiLogicHelper.getSafeCount(playerId == 1 ? 2 : 1, this.data);
   },
   initialize: function () {
     var state = {};

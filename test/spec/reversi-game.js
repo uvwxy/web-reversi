@@ -231,7 +231,7 @@ describe("The Reversi Game", function () {
     expect(result.move).toEqual({row: 0, col: 2});
   });
 
-  it('should work with the second move', function(){
+  it('should work with the second move', function () {
     var game = new ABPrune.Game(ReversiLogic);
     var state = game.initialize();
     ReversiLogicHelper.move(state, 3, 5);
@@ -242,7 +242,7 @@ describe("The Reversi Game", function () {
     expect(result.move).not.toBe(undefined);
   });
 
-  if (false){
+  if (false) {
     it('should search for the first move', function () {
       var game = new ABPrune.Game(ReversiLogic);
       var state = game.initialize();
@@ -257,6 +257,39 @@ describe("The Reversi Game", function () {
 
     });
   }
+
+  if (false) {
+    it('should search for the first move', function () {
+      var game = new ABPrune.Game(ReversiLogic);
+      var state = game.initialize();
+      var resultAlphaBeta = new ABPrune.AlphaBeta(3, state).search();
+      var resultMinMax = new ABPrune.MinMax(3, state).search();
+      expect(resultMinMax.move).not.toBe(null);
+      expect(resultMinMax.move).not.toBe(undefined);
+      expect(resultAlphaBeta.move).not.toBe(null);
+      expect(resultAlphaBeta.move).not.toBe(undefined);
+
+      expect(resultAlphaBeta.score).toBe(resultMinMax.score);
+
+    });
+  }
+
+  it('should calculate how many pieces can not be taken away', function () {
+    var game = new ABPrune.Game(ReversiLogic);
+    var state = game.initialize();
+    state.data = [
+      [1, 1, 1, 0, 0, 0, 0, 0],
+      [1, 1, 1, 0, 0, 0, 0, 0],
+      [0, 0, 0, 1, 1, 0, 0, 0],
+      [0, 0, 0, 1, 1, 0, 0, 1],
+      [0, 0, 0, 0, 0, 1, 1, 0],
+      [0, 0, 0, 0, 0, 1, 1, 0],
+      [0, 0, 0, 0, 0, 0, 0, 1],
+      [0, 0, 0, 0, 0, 0, 0, 0]
+    ];
+
+    expect(ReversiLogicHelper.getSafeCount(1, state.data)).toBe(5);
+  });
 
 
 });

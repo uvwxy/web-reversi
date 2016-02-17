@@ -36,8 +36,9 @@ angular.module('webReversiApp')
           $timeout(function () {
             var copiedState = {data: ReversiLogicHelper.invert($scope.state.data)};
             $scope.state._copyFunctions(copiedState);
-            var move = new ABPrune.AlphaBeta(4, copiedState).search().move;
-            $scope.$emit('reversiClickField', move.row, move.col);
+            var result = new ABPrune.AlphaBeta(4, copiedState).search();
+            console.log('result',result.score);
+            $scope.$emit('reversiClickField', result.move.row, result.move.col);
           }, $scope.minDelay);
         }
       }
