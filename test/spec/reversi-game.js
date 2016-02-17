@@ -242,37 +242,21 @@ describe("The Reversi Game", function () {
     expect(result.move).not.toBe(undefined);
   });
 
-  if (false) {
-    it('should search for the first move', function () {
-      var game = new ABPrune.Game(ReversiLogic);
-      var state = game.initialize();
-      var resultAlphaBeta = new ABPrune.AlphaBeta(8, state).search();
-      var resultMinMax = new ABPrune.MinMax(8, state).search();
-      expect(resultMinMax.move).not.toBe(null);
-      expect(resultMinMax.move).not.toBe(undefined);
-      expect(resultAlphaBeta.move).not.toBe(null);
-      expect(resultAlphaBeta.move).not.toBe(undefined);
 
-      expect(resultAlphaBeta.score).toBe(resultMinMax.score);
+  it('should search for the first move', function () {
+    var game = new ABPrune.Game(ReversiLogic);
+    var state = game.initialize();
+    var resultAlphaBeta = new ABPrune.AlphaBeta(4, state).search();
+    var resultMinMax = new ABPrune.MinMax(4, state).search();
 
-    });
-  }
+    expect(resultMinMax.move).not.toBe(null);
+    expect(resultMinMax.move).not.toBe(undefined);
+    expect(resultAlphaBeta.move).not.toBe(null);
+    expect(resultAlphaBeta.move).not.toBe(undefined);
 
-  if (false) {
-    it('should search for the first move', function () {
-      var game = new ABPrune.Game(ReversiLogic);
-      var state = game.initialize();
-      var resultAlphaBeta = new ABPrune.AlphaBeta(3, state).search();
-      var resultMinMax = new ABPrune.MinMax(3, state).search();
-      expect(resultMinMax.move).not.toBe(null);
-      expect(resultMinMax.move).not.toBe(undefined);
-      expect(resultAlphaBeta.move).not.toBe(null);
-      expect(resultAlphaBeta.move).not.toBe(undefined);
+    expect(resultAlphaBeta.score).toBe(resultMinMax.score);
 
-      expect(resultAlphaBeta.score).toBe(resultMinMax.score);
-
-    });
-  }
+  });
 
   it('should calculate how many pieces can not be taken away', function () {
     var game = new ABPrune.Game(ReversiLogic);
