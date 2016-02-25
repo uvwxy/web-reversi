@@ -4,7 +4,9 @@ var ReversiLogicHelper = {
     var ret = [];
     for (var row = 0; row < v.length; row++) {
       for (var col = 0; col < v.length; col++) {
-        ret.push({row: v[row], col: v[col]});
+        if (!(col == 1 && row == 1)) {
+          ret.push({row: v[row], col: v[col]});
+        }
       }
     }
     return ret;
@@ -22,12 +24,15 @@ var ReversiLogicHelper = {
     var nPos = {col: curPos.col + vector.col, row: curPos.row + vector.row};
     return (nPos.col >= 8 || nPos.row >= 8 || nPos.col < 0 || nPos.row < 0) ? null : nPos;
   },
-  move: function (state, row, col) {
-    if (state.isMoveValid(row, col, state.player)) {
-      this._doValidMove(state, row, col, state.player);
+  move: function (state, row, col, playerId) {
+    if (state.isMoveValid(row, col, playerId)) {
+      return this._doValidMove(state, row, col, playerId);
+    }
+    else {
+      return -1;
     }
   },
-  _doValidMove: function (state, row, col, player) {
+  _doValidMove: function (state, row, col, playerId) {
     var start = {row: row, col: col};
 
     var collected = [];
@@ -37,9 +42,9 @@ var ReversiLogicHelper = {
       var v = ReversiLogicHelper._vs[i];
 
       // walk into every direction
-      if (ReversiLogicHelper._isValidVector(state, start, v, player)) {
+      if (ReversiLogicHelper._isValidVector(state, start, v, playerId)) {
         var next = this._moveNext(start, v);
-        while (next != null && state.data[next.row][next.col] != player) {
+        while (next != null && state.data[next.row][next.col] != playerId) {
           collected.push(next);
           next = this._moveNext(next, v);
         }
@@ -48,17 +53,19 @@ var ReversiLogicHelper = {
 
     for (var i in collected) {
       var pos = collected[i];
-      state.data[pos.row][pos.col] = state.player;
+      state.data[pos.row][pos.col] = playerId;
     }
 
     // change player
-    state.player = state.player == 1 ? 2 : 1;
+    playerId = playerId == 1 ? 2 : 1;
 
 
     // change player back if new player had no new moves
-    if (!state.isGameOver() && !state.hasMoves(state.player)) {
-      state.player = state.player == 1 ? 2 : 1;
+    if (!state.isGameOver() && !state.hasMoves(playerId)) {
+      playerId = playerId == 1 ? 2 : 1;
     }
+
+    return playerId;
   }
   ,
   _isValidVector: function (state, start, curV, playerId) {
@@ -98,7 +105,7 @@ var ReversiLogicHelper = {
     });
     return sum;
   },
-  getSafeCount: function (playerId, data) {
+  getSafeCount: function (data, playerId) {
     var score = 0;
 
     // safe map required to track detected safe stones
@@ -184,12 +191,12 @@ var ReversiLogic = {
     }
     return false;
   },
-  getSuccessors: function (max) {
+  getSuccessors: function (playerId) {
     var succs = [];
     for (var row = 0; row < 8; row++) {
       for (var col = 0; col < 8; col++) {
 
-        if (this.isMoveValid(row, col, max ? 1 : 2)) {
+        if (this.isMoveValid(row, col, playerId)) {
 
           var copiedState = {data: []};
           this.data.forEach(function (row) {
@@ -197,7 +204,7 @@ var ReversiLogic = {
           });
           this._copyFunctions(copiedState);
           copiedState.move = {row: row, col: col};
-          ReversiLogicHelper._doValidMove(copiedState, row, col, max ? 1 : 2);
+          ReversiLogicHelper._doValidMove(copiedState, row, col, playerId);
           succs.push(copiedState);
         }
       }
@@ -230,7 +237,10 @@ var ReversiLogic = {
     return true;
   },
   getScore: function (playerId) {
-    return ReversiLogicHelper.getSafeCount(playerId, this.data) - ReversiLogicHelper.getSafeCount(playerId == 1 ? 2 : 1, this.data);
+    this.score = ReversiLogicHelper.getSafeCount(this.data,playerId)
+      - ReversiLogicHelper.getSafeCount(this.data, playerId == 1 ? 2 : 1);
+    //this.data.forEach(function(c,i,a){console.log(c)});
+    return this.score;
   },
   initialize: function () {
     var state = {};
@@ -246,8 +256,6 @@ var ReversiLogic = {
       [0, 0, 0, 0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0, 0, 0, 0]
     ];
-
-    state.player = 1;
 
     return state;
   }

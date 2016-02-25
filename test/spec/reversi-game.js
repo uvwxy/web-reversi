@@ -64,7 +64,7 @@ describe("The Reversi Game", function () {
       [0, 0, 0, 0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0, 0, 0, 0]
     ];
-    ReversiLogicHelper.move(state, 3, 5);
+    ReversiLogicHelper.move(state, 3, 5, 1);
 
     for (var row = 0; row < 8; row++) {
       for (var col = 0; col < 8; col++) {
@@ -83,7 +83,7 @@ describe("The Reversi Game", function () {
       [0, 0, 0, 0, 0, 0, 0, 0]
     ];
 
-    ReversiLogicHelper.move(state, 2, 5);
+    ReversiLogicHelper.move(state, 2, 5, 2);
 
     for (var row = 0; row < 8; row++) {
       for (var col = 0; col < 8; col++) {
@@ -102,7 +102,7 @@ describe("The Reversi Game", function () {
       [0, 0, 0, 0, 0, 0, 0, 0]
     ];
 
-    ReversiLogicHelper.move(state, 2, 4);
+    ReversiLogicHelper.move(state, 2, 4, 1);
 
     for (var row = 0; row < 8; row++) {
       for (var col = 0; col < 8; col++) {
@@ -140,6 +140,7 @@ describe("The Reversi Game", function () {
   it('should select the next player after each move', function () {
     var game = new ABPrune.Game(ReversiLogic);
     var state = game.initialize();
+    var player = 0;
     state.data = [
       [0, 0, 0, 0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0, 0, 0, 0],
@@ -150,10 +151,10 @@ describe("The Reversi Game", function () {
       [0, 0, 0, 0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0, 0, 0, 0]
     ];
-    ReversiLogicHelper.move(state, 2, 4);
-    expect(state.player).toBe(2);
-    ReversiLogicHelper.move(state, 4, 5);
-    expect(state.player).toBe(1);
+    player = ReversiLogicHelper.move(state, 2, 4, 1);
+    expect(player).toBe(2);
+    player = ReversiLogicHelper.move(state, 4, 5, 2);
+    expect(player).toBe(1);
 
     // data from issue #1
     state.data = [
@@ -166,22 +167,23 @@ describe("The Reversi Game", function () {
       [0, 0, 1, 2, 2, 2, 2, 2],
       [0, 0, 0, 2, 2, 2, 2, 2]
     ];
-    state.player = 1;
-    ReversiLogicHelper.move(state, 3, 7); // move 1 bad position ;)
-    expect(state.player).toBe(2);
-    ReversiLogicHelper.move(state, 2, 7); // move 2 into good position
-    expect(state.player).toBe(2); // so we can move again
-    ReversiLogicHelper.move(state, 2, 6);
-    expect(state.player).toBe(2); // and again
-    ReversiLogicHelper.move(state, 2, 5);
-    expect(state.player).toBe(1); // and now its 1's turn again
+
+    player = ReversiLogicHelper.move(state, 3, 7, 1); // move 1 bad position ;)
+    expect(player).toBe(2);
+
+    player = ReversiLogicHelper.move(state, 2, 7, 2); // move 2 into good position
+    expect(player).toBe(2); // so we can move again
+
+
+    player = ReversiLogicHelper.move(state, 2, 5, 2);
+    expect(player).toBe(1); // and now its 1's turn again
 
   });
 
   it('should return the successors', function () {
     var game = new ABPrune.Game(ReversiLogic);
     var state = game.initialize();
-    var succs = state.getSuccessors(state);
+    var succs = state.getSuccessors(1);
     expect(succs.length).toBe(4);
   });
 
@@ -243,11 +245,14 @@ describe("The Reversi Game", function () {
   });
 
 
-  it('should search for the first move', function () {
+  it('should return a move when searching for the first move', function () {
     var game = new ABPrune.Game(ReversiLogic);
     var state = game.initialize();
     var resultAlphaBeta = new ABPrune.AlphaBeta(4, state).search();
     var resultMinMax = new ABPrune.MinMax(4, state).search();
+
+    console.log('resultAlphaBeta', resultAlphaBeta);
+    console.log('resultMinMax', resultMinMax);
 
     expect(resultMinMax.move).not.toBe(null);
     expect(resultMinMax.move).not.toBe(undefined);
@@ -272,7 +277,7 @@ describe("The Reversi Game", function () {
       [0, 0, 0, 0, 0, 0, 0, 0]
     ];
 
-    expect(ReversiLogicHelper.getSafeCount(1, state.data)).toBe(5);
+    expect(ReversiLogicHelper.getSafeCount(state.data, 1)).toBe(5);
   });
 
 
