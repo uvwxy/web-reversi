@@ -28,12 +28,12 @@ angular.module('webReversiApp')
         $scope.score1 = ReversiLogicHelper.countPieces($scope.state, 1);
         $scope.score2 = ReversiLogicHelper.countPieces($scope.state, 2);
 
-        if ($scope.ai1Enabled && $scope.player == 1) {
+        if ($scope.ai1Enabled && $scope.player === 1) {
           $timeout(function () {
             var move = new ABPrune.AlphaBeta(4, $scope.state).search().move;
             $scope.$emit('reversiClickField', move.row, move.col);
           }, $scope.minDelay);
-        } else if ($scope.ai2Enabled && $scope.player == 2) {
+        } else if ($scope.ai2Enabled && $scope.player === 2) {
           $timeout(function () {
             var copiedState = {data: ReversiLogicHelper.invert($scope.state.data)};
             $scope.state._copyFunctions(copiedState);

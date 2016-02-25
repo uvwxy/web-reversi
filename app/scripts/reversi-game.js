@@ -1,10 +1,12 @@
+"use strict";
+
 var ReversiLogicHelper = {
   _vs: (function () {
     var v = [-1, 0, 1];
     var ret = [];
     for (var row = 0; row < v.length; row++) {
       for (var col = 0; col < v.length; col++) {
-        if (!(col == 1 && row == 1)) {
+        if (!(col === 1 && row === 1)) {
           ret.push({row: v[row], col: v[col]});
         }
       }
@@ -15,7 +17,7 @@ var ReversiLogicHelper = {
     var inverted = [];
     data.forEach(function (row) {
       inverted.push(row.slice().map(function (col) {
-        return col == 0 ? 0 : col == 1 ? 2 : 1;
+        return col === 0 ? 0 : col === 1 ? 2 : 1;
       }));
     });
     return inverted;
@@ -57,12 +59,12 @@ var ReversiLogicHelper = {
     }
 
     // change player
-    playerId = playerId == 1 ? 2 : 1;
+    playerId = playerId === 1 ? 2 : 1;
 
 
     // change player back if new player had no new moves
     if (!state.isGameOver() && !state.hasMoves(playerId)) {
-      playerId = playerId == 1 ? 2 : 1;
+      playerId = playerId === 1 ? 2 : 1;
     }
 
     return playerId;
@@ -75,7 +77,7 @@ var ReversiLogicHelper = {
       // walk direction to end
 
       var value = state.data[next.row][next.col];
-      if (value == 0) {
+      if (value === 0) {
         // nothing will be flipped
         foundOpponent = false;
         break;
@@ -98,7 +100,7 @@ var ReversiLogicHelper = {
     var sum = 0;
     state.data.forEach(function (c, i, a) {
       c.forEach(function (cc, ii, aa) {
-        if (cc == playerId) {
+        if (cc === playerId) {
           sum += 1;
         }
       });
@@ -125,7 +127,7 @@ var ReversiLogicHelper = {
 
     var corners = [{row: 0, col: 0}, {row: 0, col: 7}, {row: 7, col: 0}, {row: 7, col: 7}];
     corners.filter(function (c, i, a) {
-      return data[c.row][c.col] == playerId;
+      return data[c.row][c.col] === playerId;
     }).forEach(function (c, i, a) {
       tempStack.push(c);
       safeMap[c.row][c.col] = 1;
@@ -139,18 +141,18 @@ var ReversiLogicHelper = {
       // get valid neighbors that are on the map and belong to playerId
       var neighbors = [];
       ReversiLogicHelper._vs.filter(function (c, i, a) {
-        return !(c.row == 0 && c.col == 0);
+        return !(c.row === 0 && c.col === 0);
       }).filter(function (c, i, a) {
         return data[current.row + c.row] != undefined && data[current.row + c.row][current.col + c.col] != undefined;
       }).filter(function (c, i, a) {
-        return data[current.row + c.row][current.col + c.col] == playerId;
+        return data[current.row + c.row][current.col + c.col] === playerId;
       }).forEach(function (c, i, a) {
         neighbors.push({row: current.row + c.row, col: current.col + c.col});
       });
 
       // check neighbors that are not safe yet
       neighbors.filter(function (c, i, a) {
-        return !(safeMap[c.row][c.col] == 1);
+        return !(safeMap[c.row][c.col] === 1);
       }).filter(function (c, i, a) {
         // a stone is safe if it can not be taken via each line
         // -c -a -d
@@ -161,15 +163,15 @@ var ReversiLogicHelper = {
         var lines = [{col: 1, row: 0}, {col: 0, row: 1}, {col: 1, row: 1}, {col: -1, row: 1}];
 
         var safeLineCount = lines.filter(function (line, i, a) {
-          return safeMap[c.row + line.row] == undefined //
-            || safeMap[c.row + line.row][c.col + line.col] == undefined //
-            || safeMap[c.row + line.row][c.col + line.col] == 1 //
-            || safeMap[c.row - line.row] == undefined //
-            || safeMap[c.row - line.row][c.col - line.col] == undefined //
-            || safeMap[c.row - line.row][c.col - line.col] == 1;
+          return safeMap[c.row + line.row] === undefined //
+            || safeMap[c.row + line.row][c.col + line.col] === undefined //
+            || safeMap[c.row + line.row][c.col + line.col] === 1 //
+            || safeMap[c.row - line.row] === undefined //
+            || safeMap[c.row - line.row][c.col - line.col] === undefined //
+            || safeMap[c.row - line.row][c.col - line.col] === 1;
         }).length;
 
-        if (safeLineCount == 4) {
+        if (safeLineCount === 4) {
           safeMap[c.row][c.col] = 1;
           tempStack.push(c);
           score++;
@@ -212,7 +214,7 @@ var ReversiLogic = {
     return succs;
   },
   isMoveValid: function (row, col, playerId) {
-    if (this.data[row][col] == 0) {
+    if (this.data[row][col] === 0) {
       // spot is free
       for (var i = 0; i < ReversiLogicHelper._vs.length; i++) {
         // walk into every direction
@@ -237,7 +239,7 @@ var ReversiLogic = {
     return true;
   },
   getScore: function (playerId) {
-    var opponent = playerId == 1 ? 2 : 1;
+    var opponent = playerId === 1 ? 2 : 1;
     if (this.isGameOver()
       && (ReversiLogicHelper.countPieces(this, playerId) > ReversiLogicHelper.countPieces(this, opponent))) {
       this.score = Number.MAX_VALUE; // multikill ;)
