@@ -237,9 +237,15 @@ var ReversiLogic = {
     return true;
   },
   getScore: function (playerId) {
-    this.score = ReversiLogicHelper.getSafeCount(this.data,playerId)
-      - ReversiLogicHelper.getSafeCount(this.data, playerId == 1 ? 2 : 1);
-    //this.data.forEach(function(c,i,a){console.log(c)});
+    var opponent = playerId == 1 ? 2 : 1;
+    if (this.isGameOver()
+      && (ReversiLogicHelper.countPieces(this, playerId) > ReversiLogicHelper.countPieces(this, opponent))) {
+      this.score = Number.MAX_VALUE; // multikill ;)
+    } else {
+      this.score = ReversiLogicHelper.getSafeCount(this.data, playerId)
+        - ReversiLogicHelper.getSafeCount(this.data, opponent);
+    }
+
     return this.score;
   },
   initialize: function () {
