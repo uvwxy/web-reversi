@@ -251,9 +251,6 @@ describe("The Reversi Game", function () {
     var resultAlphaBeta = new ABPrune.AlphaBeta(4, state).search();
     var resultMinMax = new ABPrune.MinMax(4, state).search();
 
-    console.log('resultAlphaBeta', resultAlphaBeta);
-    console.log('resultMinMax', resultMinMax);
-
     expect(resultMinMax.move).not.toBe(null);
     expect(resultMinMax.move).not.toBe(undefined);
     expect(resultAlphaBeta.move).not.toBe(null);
