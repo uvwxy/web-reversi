@@ -45,7 +45,9 @@ angular.module('webReversiApp')
             var move = new ABPrune.AlphaBeta(4, $scope.state).search().move;
 
             $scope.isProcFieldClick = false;
-            $scope.$emit('reversiClickField', move.row, move.col);
+            if (move){
+              $scope.$emit('reversiClickField', move.row, move.col);
+            }
           }, $scope.minDelay);
 
         } else if ($scope.ai2Enabled && $scope.player === 2) {
@@ -55,7 +57,10 @@ angular.module('webReversiApp')
             var result = new ABPrune.AlphaBeta(4, copiedState).search();
 
             $scope.isProcFieldClick = false;
-            $scope.$emit('reversiClickField', result.move.row, result.move.col);
+
+            if (result.move){
+              $scope.$emit('reversiClickField', result.move.row, result.move.col);
+            }
           }, $scope.minDelay);
         } else {
           // no other ai moved, enable click
