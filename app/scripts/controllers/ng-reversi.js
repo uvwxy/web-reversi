@@ -42,7 +42,7 @@ angular.module('webReversiApp')
         // check if other opponent needs to move
         if ($scope.ai1Enabled && $scope.player === 1) {
           $timeout(function () {
-            var move = new ABPrune.AlphaBeta(6, $scope.state).search().move;
+            var move = new ABPrune.AlphaBeta(8, $scope.state).search().move;
 
             $scope.isProcFieldClick = false;
             if (move){
@@ -54,7 +54,7 @@ angular.module('webReversiApp')
           $timeout(function () {
             var copiedState = {data: ReversiLogicHelper.invert($scope.state.data)};
             $scope.state._copyFunctions(copiedState);
-            var result = new ABPrune.AlphaBeta(6, copiedState).search();
+            var result = new ABPrune.AlphaBeta(8, copiedState).search();
 
             $scope.isProcFieldClick = false;
 
